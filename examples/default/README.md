@@ -11,6 +11,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.74"
     }
+    modtm = {
+      source  = "azure/modtm"
+      version = "~> 0.3"
+    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.5"
@@ -49,18 +53,22 @@ resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
 }
 
-# This is the module call
-# Do not specify location here due to the randomization above.
-# Leaving location as `null` will cause the module to use the resource group location
-# with a data source.
-module "test" {
-  source = "../../"
-  # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
-  # ...
-  location            = azurerm_resource_group.this.location
-  name                = "TODO" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
-  resource_group_name = azurerm_resource_group.this.name
+module "local_network_gateway" {
+  source = "../.."
+  #source             = "Azure/terraform-azurerm-avm-res-network-localnetworkgateway/azurerm"
 
+  # Resource group variables
+  location = azurerm_resource_group.this.location
+  name     = "example-local-network"
+  tags     = {}
+
+  # Local network gateway variables
+  resource_group_name = azurerm_resource_group.this.name
+  gateway_address     = "192.168.1.1"
+  address_space       = ["192.168.0.0/24"]
+
+  # BGP settings (optional)
+  bgp_settings     = null
   enable_telemetry = var.enable_telemetry # see variables.tf
 }
 ```
@@ -112,6 +120,12 @@ No outputs.
 
 The following Modules are called:
 
+### <a name="module_local_network_gateway"></a> [local\_network\_gateway](#module\_local\_network\_gateway)
+
+Source: ../..
+
+Version:
+
 ### <a name="module_naming"></a> [naming](#module\_naming)
 
 Source: Azure/naming/azurerm
@@ -123,12 +137,6 @@ Version: ~> 0.3
 Source: Azure/avm-utl-regions/azurerm
 
 Version: ~> 0.1
-
-### <a name="module_test"></a> [test](#module\_test)
-
-Source: ../../
-
-Version:
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection

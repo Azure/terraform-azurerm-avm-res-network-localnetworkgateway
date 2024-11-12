@@ -1,6 +1,9 @@
-output "private_endpoints" {
-  description = <<DESCRIPTION
-  A map of the private endpoints created.
-  DESCRIPTION
-  value       = var.private_endpoints_manage_dns_zone_group ? azurerm_private_endpoint.this_managed_dns_zone_groups : azurerm_private_endpoint.this_unmanaged_dns_zone_groups
+output "name" {
+  description = "The name of the local network gateway"
+  value       = azurerm_local_network_gateway.this.name
+}
+
+output "resource_id" {
+  description = "The name of the local network gateway"
+  value       = azurerm_local_network_gateway.this.id
 }

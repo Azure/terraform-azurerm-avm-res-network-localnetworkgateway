@@ -1,5 +1,6 @@
 terraform {
   required_version = "~> 1.5"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -57,18 +58,14 @@ resource "azurerm_resource_group" "this" {
 
 module "local_network_gateway" {
   source = "../.."
-  #source             = "Azure/terraform-azurerm-avm-res-network-localnetworkgateway/azurerm"
 
+  address_space   = ["192.168.0.0/24"]
+  gateway_address = "192.168.1.1"
   # Resource group variables
   location = azurerm_resource_group.this.location
   name     = "example-local-network"
-  tags     = {}
-
   # Local network gateway variables
   resource_group_name = azurerm_resource_group.this.name
-  gateway_address     = "192.168.1.1"
-  address_space       = ["192.168.0.0/24"]
-
   # BGP settings (optional)
   bgp_settings = {
     asn                 = 65010
@@ -76,7 +73,6 @@ module "local_network_gateway" {
     peer_weight         = 0
   }
   enable_telemetry = var.enable_telemetry # see variables.tf
-
   role_assignments = {
     role_assignment_1 = {
       role_definition_id_or_name       = data.azurerm_role_definition.example.name
@@ -89,4 +85,5 @@ module "local_network_gateway" {
       skip_service_principal_aad_check = false
     },
   }
+  tags = {}
 }

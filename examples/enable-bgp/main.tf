@@ -27,7 +27,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "~> 0.1"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 # This allows us to randomize the region for the resource group.
@@ -66,6 +66,6 @@ module "local_network_gateway" {
     bgp_peering_address = "192.168.2.1"
     peer_weight         = 0
   }
-  enable_telemetry = false # see variables.tf
+  enable_telemetry = var.enable_telemetry # see variables.tf
   tags             = {}
 }

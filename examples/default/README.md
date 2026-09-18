@@ -36,7 +36,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "~> 0.1"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 
 # This allows us to randomize the region for the resource group.
@@ -71,7 +71,7 @@ module "local_network_gateway" {
   resource_group_name = azurerm_resource_group.this.name
   # BGP settings (optional)
   bgp_settings     = null
-  enable_telemetry = false # see variables.tf
+  enable_telemetry = var.enable_telemetry # see variables.tf
   tags             = {}
 }
 ```
@@ -111,7 +111,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `true`
+Default: `false`
 
 ## Outputs
 
